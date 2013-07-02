@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>DOM MUTATE EVENTS LOL</title>
+	<script>
+	// Notify us when any node within the document is modified, added removed, etc.
+	document.addEventListener("DOMSubtreeModified", function(e) {
+		console.warn("mutate!", e);
+	}, false);
+
+	function smurf() {
+		var s = document.createElement("smurffi");
+		s.setAttribute("poop", 0)
+		s.innerHTML = '<button onclick="smurffaa(this)">smurg</button>'
+
+		// TODO: doesn't work in WEBKIT. see link.
+		// https://developer.mozilla.org/en-US/docs/Web/Guide/DOM/Events/Mutation_events
+		s.addEventListener("DOMAttrModified", function(e) {
+			console.warn("change!", this, e.attrName + ": ", e.prevValue," → ", e.newValue);
+		}, false);
+
+		document.body.appendChild(s);
+	}
+
+	function smurffaa(e) {
+		s = e.parentElement
+		s.setAttribute("poop", s.getAttribute("poop")+1)
+	}
+	</script>
+</head>
+<body>
+	<h1>DOM MUTATE <small><a href="http://davidwalsh.name/dom-events-javascript">¹</a> (depracated in favor of <a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver">mutation observers</a>)</small></h1>
+	<button onclick="smurf()">Lisää smurffi</button>
+</body>
+</html>

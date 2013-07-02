@@ -1,0 +1,183 @@
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+<style>
+map {
+  display: block;
+  height: 400px;
+  width: 100%;
+}
+
+</style>
+
+<h1>html 3</h1>
+
+
+<div ng-app="components">
+
+  <map x="51.505" y="-0.09" zoomlevel="13">
+
+<!--
+    <smurffi x="51.508" y="-0.11"></smurffi>
+    <smurffi x="51.509" y="-0.12"></smurffi>
+    <smurffi x="51.510" y="-0.13"></smurffi>
+-->
+
+  </map>
+
+</div>
+
+
+
+
+<script>
+  circles = {}
+
+
+  var app = angular.module('components', [])
+  app.directive('map', function($compile) {
+      return {
+        restrict: 'E',
+        transclude: false,
+        scope: {},
+        controller: function($rootScope, $scope, $element, $compile) {
+          console.log($element);
+
+          var x = $element.attr('x');
+          var y = $element.attr('y');
+          var zoomlevel = $element.attr('zoomlevel');
+
+          console.log("debug", x, y, zoomlevel);
+          console.log($element);
+
+          map = L.map($element[0]).setView([x, y], zoomlevel);
+
+          L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+              attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+              maxZoom: 18
+          }).addTo(map);
+
+
+          $scope.updateri = function(d, i) {
+            console.log("updateri saa", this)
+            console.log("d: ", d)
+            d.circle.setLatLng(d.latlng)
+          }
+
+          $scope.compileri = function(d, i) {
+            console.log("compileri sai", this);
+            console.log(d);
+
+            d.circle = L.circle([d.latlng[0], d.latlng[1]], 500, {
+            			color: 'blue',
+            			fillColor: '#f03',
+            			fillOpacity: 0.5
+            		})
+
+            d.circle.addTo(map).bindPopup("I am a circle.");
+
+            //$compile(this)($scope);
+
+            // console.log("ja ne on", elems)
+            //
+            // for (var i=0; i<elems.length; i++) {
+            //   console.log("compiloidaan", elems[i]);
+            //   $compile(elems[i])($scope);
+            // }
+
+          };
+
+        }
+      };
+    })
+
+  app.directive('smurffi', function() {
+      return {
+        restrict: 'E',
+        transclude: true,
+        scope: {
+        },
+        link: function($scope, $element, $attrs) {
+          console.log("<smurffi> LINKITYS");
+          console.log("attrit", $attrs);
+        },
+        controller: function($rootScope, $scope, $element) {
+          console.log("<smurffi> CONTROLLERI");
+          // var x = $element.attr('x');
+          // var y = $element.attr('y');
+          //
+          // var munaCircle =  L.circle([x, y], 500, {
+          //      color: 'blue',
+          //      fillColor: '#f03',
+          //      fillOpacity: 0.5
+          //    })
+          //
+          // munaCircle.addTo(map).bindPopup("I am a circle.");
+
+        },
+        replace: false
+      };
+    })
+
+</script>
+
+
+<script>
+
+globaalidata = [
+  {
+    latlng: [ 51.508, -0.11 ]
+  },
+  {
+    latlng: [51.507, -0.10]
+  },
+  {
+    latlng: [51.509, -0.12]
+  }
+];
+
+
+smurrffiliikkuu = function() {
+  globaalidata[0].latlng[0] += 0.001;
+
+  paivitaSmurffit(globaalidata);
+}
+
+paivitaSmurffit = function(data) {
+
+  d3map = d3.select("map")
+
+  var smurffit = d3map.selectAll("smurffi")
+  .data(data)
+
+  smurffit
+  .enter()
+  .append("smurffi")
+  .each(angular.element(document.querySelector("map")).scope().compileri);
+
+  smurffit
+  .attr("x", function(d) {
+    return d.latlng[0];
+  })
+  .attr("y", function(d) {
+     return d.latlng[1];
+   })
+   .each(angular.element(document.querySelector("map")).scope().updateri);
+
+}
+
+
+window.addEventListener("DOMContentLoaded", function() {
+
+  paivitaSmurffit(globaalidata);
+
+});
+
+</script>
+
+

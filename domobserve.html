@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>DOM MUTATE OBSERVER</title>
+	<script>
+	document.addEventListener("DOMContentLoaded", function(e) {
+		// create an observer instance
+		var observer = new MutationObserver(function(mutations) {
+		  mutations.forEach(function(mutation) {
+		    console.log(mutation);
+		  });
+		});
+
+		// configuration of the observer:
+		var config = {
+			attributes: true,
+			attributeOldValue: true,
+			childList: true,
+			characterData: true,
+			subtree: true
+		};
+
+		// pass in the target node, as well as the observer options
+		observer.observe(document.body, config);
+
+		// later, you can stop observing
+		// observer.disconnect();
+	});
+
+	function smurf() {
+		var s = document.createElement("smurffi");
+		// s.setAttribute("poop", 0)
+		s.innerHTML = '<button onclick="smurffaa(this)">smurg</button>'
+
+		document.body.appendChild(s);
+	}
+
+	function smurffaa(e) {
+		s = e.parentElement
+		s.setAttribute("poop", s.getAttribute("poop")+1)
+		// e.textContent += 1
+	}
+	</script>
+</head>
+<body>
+	<h1>DOM mutation observer <small><a href="https://hacks.mozilla.org/2012/05/dom-mutationobserver-reacting-to-dom-changes-without-killing-browser-performance/">❤</a></small></h1>
+	<button onclick="smurf()">Lisää smurffi</button>
+</body>
+</html>
