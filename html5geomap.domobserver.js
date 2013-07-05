@@ -18,8 +18,6 @@ HTML5Geomap.DOMObserver.observer = function(mutations) {
 
 							console.log("SMURFFI", node, smurffi)
 
-							// observe attribute changes
-							// globaaliObserver.observe(node, { attributes: true })
 							break
 						default:
 							console.log("UNSUPPORTED", node)
@@ -37,7 +35,7 @@ HTML5Geomap.DOMObserver.observer = function(mutations) {
 }
 
 HTML5Geomap.DOMObserver.initialize = function(rootElem) {
-	globaaliObserver = new MutationObserver(HTML5Geomap.DOMObserver.observer)
+	var observer = new MutationObserver(HTML5Geomap.DOMObserver.observer)
 
 	// NOTE: not observing subtree
 	// TODO: filter out leaflet crap from subtree MutationRecords
@@ -49,7 +47,7 @@ HTML5Geomap.DOMObserver.initialize = function(rootElem) {
 		characterData: true
 	}
 
-	globaaliObserver.observe(rootElem, config)
+	observer.observe(rootElem, config)
 }
 
 // OLETETAAN ET ON YKS
