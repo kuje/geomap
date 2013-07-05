@@ -14,7 +14,8 @@ HTML5Geomap.DOMObserver.observer = function(mutations) {
 					switch (node.nodeName) {
 						case "SMURFFI":
 							var smurffi = new HTML5Geomap.Smurffi(node)
-							smurffi.lolcircle.addTo(geomap.map.map)
+							geomap.add(smurffi)
+
 							console.log("SMURFFI", node, smurffi)
 
 							// observe attribute changes
@@ -52,4 +53,6 @@ HTML5Geomap.DOMObserver.initialize = function(rootElem) {
 }
 
 // OLETETAAN ET ON YKS
+
+
 HTML5Geomap.DOMObserver.initialize(document.querySelector("geomap"))

@@ -8,14 +8,21 @@ HTML5Geomap.Smurffi = function(elem) {
   var initLat = elem.getAttribute("lat")
   var initLon = elem.getAttribute("lon")
 
-  this.lolcircle = L.circle([initLat, initLon], 500, {
-    // TODO: css???
-    color: elem.getAttribute("stroke") || "red",
-    weight: elem.getAttribute("strokeWidth") || 2,
-    opacity: elem.getAttribute("strokeOpacity") || 0.6,
-    fillColor: elem.getAttribute("fill") || "red",
-    fillOpacity: elem.getAttribute("fillOpacity") || 0.4
-  }).bindPopup(elem.innerHTML)
+  switch (HTML5Geomap.engine) {
+    case "leaflet":
+      this.obj = L.circle([initLat, initLon], 500, {
+        // TODO: css???
+        color: elem.getAttribute("stroke") || "red",
+        weight: elem.getAttribute("strokeWidth") || 2,
+        opacity: elem.getAttribute("strokeOpacity") || 0.6,
+        fillColor: elem.getAttribute("fill") || "red",
+        fillOpacity: elem.getAttribute("fillOpacity") || 0.4
+      }).bindPopup(elem.innerHTML)
+
+      break;
+    default:
+      console.log("HTML5Geomap.engine not supported")
+  }
 }
 
 HTML5Geomap.Geomap = function(elem) {
@@ -50,12 +57,19 @@ HTML5Geomap.Geomap = function(elem) {
     this.mapElems.push(mapElem)
   }
 
-  console.log("all sub map elems:", this.mapElems)
-
 
   switch (HTML5Geomap.engine) {
     case "leaflet":
-      this.map = new HTML5Geomap.LeafletMap(elem, [initLat, initLon], initZoomlevel)
+      this.map = L.map(elem)
+      this.map.setView([initLat, initLon], initZoomlevel)
+
+      var tileLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+           attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+           maxZoom: 18
+       })
+
+      tileLayer.addTo(this.map)
+      // this.map = new HTML5Geomap.LeafletMap(elem, [initLat, initLon], initZoomlevel)
       break;
     default:
       console.log("HTML5Geomap.engine not supported")
@@ -64,10 +78,20 @@ HTML5Geomap.Geomap = function(elem) {
 
   for (var i=0; i<this.mapElems.length; i++) {
     console.log("watlol", this.mapElems[i])
-    this.mapElems[i].lolcircle.addTo(this.map.map);
+    this.mapElems[i].obj.addTo(this.map);
   }
 
-  HTML5Geomap.maps[this.elem] = this
+
+
+  this.add = function(obj) {
+    switch (HTML5Geomap.engine) {
+      case "leaflet":
+        obj.obj.addTo(this.map)
+        break;
+      default:
+        console.log("HTML5Geomap.engine not supported")
+    }
+  }
 }
 
 
@@ -77,21 +101,14 @@ HTML5Geomap.initialize = function(rootElem) {
 
   for (var i=0; i<html5geomapElems.length; i++) {
     var geomap = new HTML5Geomap.Geomap(html5geomapElems[i])
+    HTML5Geomap.maps[geomap.elem] = geomap
   }
 
 }
 
 HTML5Geomap.LeafletMap = function(elem, initView, initZoomlevel) {
 
-  this.map = L.map(elem)
-  this.map.setView(initView, initZoomlevel)
 
-  this.tileLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-       maxZoom: 18
-   })
-
-  this.tileLayer.addTo(this.map)
 }
 
 
