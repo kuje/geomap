@@ -22,6 +22,11 @@
   	top: 1em;
   	right: 1em;
   }
+
+  smurffi {
+    fill: "red";
+    kakka: "green";
+  }
 </style>
 
 <button onclick="javascript:smurffitulee(this)">smurffi</button>
@@ -52,6 +57,11 @@ globaalidata = [
   }
 ];
 
+geomap.addEventListener("click", function(e) {
+  console.log("geomap click", e)
+});
+
+
 smurffitulee = function(el) {
 	var s = document.createElement("smurffi")
 	s.setAttribute("lat", 60.2497278)
@@ -61,7 +71,7 @@ smurffitulee = function(el) {
 
 	// LEAFLET KAAPPAA
 	s.addEventListener("click", function(e) {
-		console.log(e)
+		console.log("smurfi click", e)
 	})
 
 	document.querySelector("geomap").appendChild(s)

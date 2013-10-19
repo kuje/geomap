@@ -8,14 +8,18 @@ HTML5Geomap.Smurffi = function(elem) {
   var initLat = elem.getAttribute("lat")
   var initLon = elem.getAttribute("lon")
 
+  var computedStyle = getComputedStyle(this.elem)
+
+  console.log("PEN", this.elem.style)
   switch (HTML5Geomap.engine) {
     case "leaflet":
+
       this.obj = L.circle([initLat, initLon], 500, {
         // TODO: css???
-        color: elem.getAttribute("stroke") || "red",
+        color: computedStyle["stroke"] || "red",
         weight: elem.getAttribute("strokeWidth") || 2,
         opacity: elem.getAttribute("strokeOpacity") || 0.6,
-        fillColor: elem.getAttribute("fill") || "red",
+        fillColor: computedStyle["fill"] || "red",
         fillOpacity: elem.getAttribute("fillOpacity") || 0.4
       }).bindPopup(elem.innerHTML)
 
@@ -84,6 +88,7 @@ HTML5Geomap.Geomap = function(elem) {
 
 
   this.add = function(obj) {
+
     switch (HTML5Geomap.engine) {
       case "leaflet":
         obj.obj.addTo(this.map)
