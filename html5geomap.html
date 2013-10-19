@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
-<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+<!-- css will be leaked through inside shadow dom -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
@@ -28,6 +29,18 @@
     kakka: "green";
   }
 </style>
+
+<template id="geomapDivTemplate">
+  <style>
+    /* this causes glitches; instead, we leak leaflet css from the host */
+    /*@import url("http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css");*/
+    div.geomap {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <div class="geomap"></div>
+</template>
 
 <button onclick="javascript:smurffitulee(this)">smurffi</button>
 

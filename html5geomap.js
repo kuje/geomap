@@ -31,6 +31,7 @@ HTML5Geomap.Smurffi = function(elem) {
 
 HTML5Geomap.Geomap = function(elem) {
   this.elem = elem;
+  this.mapDiv = null;
   this.map = null;
 
   this.mapElems = [];
@@ -64,7 +65,14 @@ HTML5Geomap.Geomap = function(elem) {
 
   switch (HTML5Geomap.engine) {
     case "leaflet":
-      this.map = L.map(elem)
+      var shadow = elem.webkitCreateShadowRoot();
+      var template = document.querySelector("#geomapDivTemplate");
+      shadow.appendChild(template.content);
+      shadow.applyAuthorStyles = true; // leak css from the host
+      mapDiv = shadow.querySelector("div")
+      console.log("mapDiv", mapDiv)
+
+      this.map = L.map(mapDiv)
       this.map.setView([initLat, initLon], initZoomlevel)
 
       var tileLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
