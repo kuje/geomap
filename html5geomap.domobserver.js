@@ -3,7 +3,7 @@ HTML5Geomap.DOMObserver = {}
 HTML5Geomap.DOMObserver.observer = function(mutations) {
 	mutations.forEach(function(mutation) {
 		// TODO: mysteriously no muttaionRecord from leaflet's div elements?
-		console.log(mutation)
+		console.log(mutation.type, mutation)
 
 		switch (mutation.target.nodeName) {
 			case "GEOMAP":
@@ -25,12 +25,13 @@ HTML5Geomap.DOMObserver.observer = function(mutations) {
 				}
 			break
 
-		case "SMURFFI":
-			console.log("JUMMI")
-			if (mutation.type == "attributes") {
-				console.log(mutation.attributeName, mutation.target.getAttribute(mutation.attributeName))
+			case "SMURFFI":
+				switch (mutation.type) {
+					case "attributes":
+						console.log("ATTR", mutation.attributeName, mutation.target.getAttribute(mutation.attributeName))
+						break
+				}
 			}
-		}
 	})
 }
 

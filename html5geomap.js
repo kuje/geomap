@@ -9,8 +9,8 @@ HTML5Geomap.Smurffi = function(elem) {
   var initLon = elem.getAttribute("lon")
 
   var computedStyle = getComputedStyle(this.elem)
+  // console.log("PEN", this.elem.style)
 
-  console.log("PEN", this.elem.style)
   switch (HTML5Geomap.engine) {
     case "leaflet":
 
@@ -44,7 +44,7 @@ HTML5Geomap.Geomap = function(elem) {
   var elems = elem.querySelectorAll("*")
 
   for (var i=0; i<elems.length; i++) {
-    console.log("elem", elems[i])
+    console.log("esidom smurffi", elems[i])
 
     var elemClass = null;
     var mapElem = null;
@@ -70,10 +70,15 @@ HTML5Geomap.Geomap = function(elem) {
       shadow.appendChild(template.content);
       shadow.applyAuthorStyles = true; // leak css from the host
       mapDiv = shadow.querySelector("div")
-      console.log("mapDiv", mapDiv)
 
       this.map = L.map(mapDiv)
       this.map.setView([initLat, initLon], initZoomlevel)
+
+      // this.map.on('click', function(e) {
+      //     console.log(e.latlng);
+      // });
+
+      // TODO: geolocate if asked
 
       var tileLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
@@ -93,7 +98,20 @@ HTML5Geomap.Geomap = function(elem) {
     this.mapElems[i].obj.addTo(this.map);
   }
 
-
+  // calls func(latlng[lat, lng], originalEvent)
+  this.on = function(eventType, func) {
+    this.map.on(eventType, function(e) {
+      latlng = null
+      switch (HTML5Geomap.engine) {
+        case "leaflet":
+          latlng = [e.latlng.lat, e.latlng.lng]
+          break
+        default:
+          console.log("HTML5Geomap.engine not supported")
+      }
+      func(latlng, e)
+    })
+  }
 
   this.add = function(obj) {
 
@@ -115,6 +133,8 @@ HTML5Geomap.initialize = function(rootElem) {
   for (var i=0; i<html5geomapElems.length; i++) {
     var geomap = new HTML5Geomap.Geomap(html5geomapElems[i])
     HTML5Geomap.maps[geomap.elem] = geomap
+    // harshly save the Geomap for client usage purposes
+    html5geomapElems[i].geomap = geomap
   }
 
 }
