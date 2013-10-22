@@ -5,25 +5,12 @@ HTML5Geomap.maps = {};
 
 HTML5Geomap.Marker = function(elem) {
   this.elem = elem;
-  var initLat = elem.getAttribute("lat")
-  var initLon = elem.getAttribute("lon")
-
-  var computedStyle = getComputedStyle(this.elem)
-  // console.log("PEN", this.elem.style)
+  var latlng = [ elem.getAttribute("lat"), elem.getAttribute("lon") ]
 
   switch (HTML5Geomap.engine) {
     case "leaflet":
-
-      this.obj = L.circle([initLat, initLon], 500, {
-        // TODO: css???
-        color: computedStyle["stroke"] || "red",
-        weight: elem.getAttribute("strokeWidth") || 2,
-        opacity: elem.getAttribute("strokeOpacity") || 0.6,
-        fillColor: computedStyle["fill"] || "red",
-        fillOpacity: elem.getAttribute("fillOpacity") || 0.4
-      }).bindPopup(elem.innerHTML)
-
-      break;
+      this.obj = L.marker(latlng).bindPopup(elem.innerHTML)
+      break
     default:
       console.log("HTML5Geomap.engine not supported")
   }
