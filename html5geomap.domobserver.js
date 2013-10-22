@@ -12,11 +12,11 @@ HTML5Geomap.DOMObserver.observer = function(mutations) {
 					var geomap = HTML5Geomap.maps[mutation.target]
 
 					switch (node.nodeName) {
-						case "SMURFFI":
-							var smurffi = new HTML5Geomap.Smurffi(node)
-							geomap.add(smurffi)
+						case "MARKER":
+							var marker = new HTML5Geomap.Marker(node)
+							geomap.add(marker)
 
-							console.log("SMURFFI", node, smurffi)
+							console.log("MARKER", node, marker)
 
 							break
 						default:
@@ -25,7 +25,7 @@ HTML5Geomap.DOMObserver.observer = function(mutations) {
 				}
 			break
 
-			case "SMURFFI":
+			case "MARKER":
 				switch (mutation.type) {
 					case "attributes":
 						console.log("ATTR", mutation.attributeName, mutation.target.getAttribute(mutation.attributeName))

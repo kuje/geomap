@@ -3,7 +3,7 @@ HTML5Geomap.engine = "leaflet";
 HTML5Geomap.maps = {};
 
 
-HTML5Geomap.Smurffi = function(elem) {
+HTML5Geomap.Marker = function(elem) {
   this.elem = elem;
   var initLat = elem.getAttribute("lat")
   var initLon = elem.getAttribute("lon")
@@ -44,22 +44,23 @@ HTML5Geomap.Geomap = function(elem) {
   var elems = elem.querySelectorAll("*")
 
   for (var i=0; i<elems.length; i++) {
-    console.log("esidom smurffi", elems[i])
+    console.log("ORIGINAL DOM", elems[i])
 
     var elemClass = null;
-    var mapElem = null;
 
     switch(elems[i].nodeName) {
-      case "SMURFFI":
-        elemClass = HTML5Geomap.Smurffi;
+      case "MARKER":
+        elemClass = HTML5Geomap.Marker;
         break;
       default:
-        console.log("unsupported geomap element: ", mapElem[i].nodeName)
+        console.log("unsupported geomap child:", elems[i].nodeName)
         break;
     }
 
-    mapElem = new elemClass(elems[i]);
-    this.mapElems.push(mapElem)
+    if (elemClass) {
+      var mapElem = new elemClass(elems[i]);
+      this.mapElems.push(mapElem)
+    }
   }
 
 

@@ -26,22 +26,22 @@ geomap.addEventListener("click", function(e) {
 // TODO: make e map engine independent
 geomap.geomap.on("click", function(latlng, e) {
   console.log("BOOM", latlng, e);
-  var smurffi = {
+  var marker = {
     id: "click"+latlng,
-    text: "CLICK SMURFFI",
+    text: "CLICK marker",
     latlng: latlng,
     fill: "purple"
   }
-  d3smurffi(smurffi)
+  d3marker(marker)
 });
 
 
-smurffitulee = function(el) {
-	var s = document.createElement("smurffi")
+markertulee = function(el) {
+	var s = document.createElement("marker")
 	s.setAttribute("lat", 60.2497278)
 	s.setAttribute("lon", 24.1)
 	s.setAttribute("fill", "blue")
-	s.textContent = "MOI UUS SMURFFI"
+	s.textContent = "MOI UUS marker"
 
 	// LEAFLET KAAPPAA
 	s.addEventListener("click", function(e) {
@@ -51,42 +51,41 @@ smurffitulee = function(el) {
 	document.querySelector("geomap").appendChild(s)
 }
 
-buttonsmurffi = function(lol) {
-  var smurffi = {
+buttonmarker = function(lol) {
+  var marker = {
     id: "button1",
-    text: "MOI UUS SMURFFI",
+    text: "MOI UUS marker",
     latlng: [ 60.2497278, 24.1],
     fill: "blue"
   }
 
-  paivitaSmurffit([smurffi])
+  updateMarkers([marker])
 }
 
-d3smurffi = function(smurffi) {
+d3marker = function(marker) {
   // TODO: remember old smurffee
-  paivitaSmurffit([smurffi])
+  updateMarkers([marker])
 }
 
 smurrffiliikkuu = function() {
   globaalidata[0].latlng[0] += 0.001;
 
-  paivitaSmurffit(globaalidata);
+  updateMarkers(globaalidata);
 }
 
-paivitaSmurffit = function(data) {
+updateMarkers = function(data) {
 
   d3map = d3.select("geomap")
   // console.log("d3map", d3map)
 
-  var smurffit = d3map.selectAll("smurffi")
+  var markers = d3map.selectAll("marker")
   .data(data, function(d) { return d ? d.id : null } )
 
-  smurffit
+  markers
   .enter()
-  .append("smurffi")
-  // .each(angular.element(document.querySelector("map")).scope().compileri);
+  .append("marker")
 
-  smurffit
+  markers
   .text(function(d, i) { return d.text + i })
   .attr("lat", function(d) {
     return d.latlng[0];
@@ -94,13 +93,12 @@ paivitaSmurffit = function(data) {
   .attr("lon", function(d) {
      return d.latlng[1];
    })
-  // .each(angular.element(document.querySelector("map")).scope().updateri);
 
 }
 
 
 window.addEventListener("DOMContentLoaded", function() {
 
-  // paivitaSmurffit(globaalidata);
+  // updateMarkers(globaalidata);
 
 });
