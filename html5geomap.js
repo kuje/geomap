@@ -4,6 +4,9 @@ HTML5Geomap.maps = {};
 
 
 HTML5Geomap.Marker = function(elem) {
+  // harshly save the Geomap into element DOM
+  elem._geomap = this
+
   this.elem = elem;
   var latlng = [ elem.getAttribute("lat"), elem.getAttribute("lon") ]
 
@@ -17,6 +20,9 @@ HTML5Geomap.Marker = function(elem) {
 }
 
 HTML5Geomap.Geomap = function(elem) {
+  // harshly save the Geomap into element DOM
+  elem._geomap = this
+
   this.elem = elem;
   this.mapDiv = null;
   this.map = null;
@@ -102,10 +108,20 @@ HTML5Geomap.Geomap = function(elem) {
   }
 
   this.add = function(obj) {
-
     switch (HTML5Geomap.engine) {
       case "leaflet":
         obj.obj.addTo(this.map)
+        obj.obj.openPopup() // TODO DECOUPLE
+        break;
+      default:
+        console.log("HTML5Geomap.engine not supported")
+    }
+  }
+
+  this.remove = function(obj) {
+    switch (HTML5Geomap.engine) {
+      case "leaflet":
+        this.map.removeLayer(obj.obj)
         break;
       default:
         console.log("HTML5Geomap.engine not supported")
@@ -120,9 +136,8 @@ HTML5Geomap.initialize = function(rootElem) {
 
   for (var i=0; i<html5geomapElems.length; i++) {
     var geomap = new HTML5Geomap.Geomap(html5geomapElems[i])
+    // NOTE: this fails
     HTML5Geomap.maps[geomap.elem] = geomap
-    // harshly save the Geomap for client usage purposes
-    html5geomapElems[i].geomap = geomap
   }
 
 }

@@ -18,63 +18,24 @@ globaalidata = [
 
 // DOM level click event
 geomap.addEventListener("click", function(e) {
-  console.log("geomap click", this.geomap)
-  //containerPointToLatLng
+  console.log("geomap click", this._geomap)
 });
 
 // MAP level click event
-// TODO: make e map engine independent
-geomap.geomap.on("click", function(latlng, e) {
-  console.log("BOOM", latlng, e);
+// TODO: make e map engine independent, now it's leaflet
+geomap._geomap.on("click", function(latlng, e) {
+  console.log("geomap innerclick", e);
   var marker = {
-    id: "click"+latlng,
-    text: "CLICK marker",
+    id: "click-TODO-"+latlng,
     latlng: latlng,
-    fill: "purple"
+    text: document.querySelector("#disruptive-template").innerHTML
   }
-  d3marker(marker)
+  // TODO: actuaally control the marker stream with d3
+  updateMarkers([marker])
 });
 
 
-markertulee = function(el) {
-	var s = document.createElement("marker")
-	s.setAttribute("lat", 60.2497278)
-	s.setAttribute("lon", 24.1)
-	s.setAttribute("fill", "blue")
-	s.textContent = "MOI UUS marker"
-
-	// LEAFLET KAAPPAA
-	s.addEventListener("click", function(e) {
-		console.log("smurfi click", e)
-	})
-
-	document.querySelector("geomap").appendChild(s)
-}
-
-buttonmarker = function(lol) {
-  var marker = {
-    id: "button1",
-    text: "MOI UUS marker",
-    latlng: [ 60.2497278, 24.1],
-    fill: "blue"
-  }
-
-  updateMarkers([marker])
-}
-
-d3marker = function(marker) {
-  // TODO: remember old smurffee
-  updateMarkers([marker])
-}
-
-smurrffiliikkuu = function() {
-  globaalidata[0].latlng[0] += 0.001;
-
-  updateMarkers(globaalidata);
-}
-
 updateMarkers = function(data) {
-
   d3map = d3.select("geomap")
   // console.log("d3map", d3map)
 
@@ -84,18 +45,16 @@ updateMarkers = function(data) {
   markers
   .enter()
   .append("marker")
-
-  markers
-  .text(function(d, i) { return d.text + i })
-  .attr("lat", function(d) {
-    return d.latlng[0];
-  })
-  .attr("lon", function(d) {
-     return d.latlng[1];
-   })
-
+  .html(function(d, i) { return d.text })
+  .attr("lat", function(d) { return d.latlng[0] })
+  .attr("lon", function(d) { return d.latlng[1] })
 }
 
+disruptiveOK = function(el) {
+  var input = el.previousElementSibling
+  console.log(el, input)
+  el.parentNode.innerHTML = input.value
+}
 
 window.addEventListener("DOMContentLoaded", function() {
 

@@ -20,6 +20,10 @@
   	height: 100%;
   }
 
+  .template {
+    display: none;
+  }
+
   geomap {
     display: block;
     height: 100%;
@@ -46,7 +50,10 @@
   <div class="geomap"></div>
 </template>
 
-<button onclick="javascript:buttonmarker(this)">new marker</button>
+<div id="disruptive-template" class="template">
+    <input type="text" name="disruptive-reason" placeholder="explain?"/>
+    <button onclick="disruptiveOK(this)">ok</button>
+</div>
 
 <!-- MOSCONE 37.7839431,-122.4012887 -->
 <!-- LOHJA lat="60.2497278" lon="24.0649247" -->
