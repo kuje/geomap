@@ -1,5 +1,6 @@
 var geomap = document.querySelector("geomap")
 var maplatlng = [ parseFloat(geomap.getAttribute("lat")), parseFloat(geomap.getAttribute("lon")) ]
+var markerID = 0
 
 globaalidata = [
   {
@@ -26,9 +27,9 @@ geomap.addEventListener("click", function(e) {
 geomap._geomap.on("click", function(latlng, e) {
   console.log("geomap innerclick", e);
   var marker = {
-    id: "click-TODO-"+latlng,
+    id: "click-marker-" + ++markerID,
     latlng: latlng,
-    text: document.querySelector("#disruptive-template").innerHTML
+    text: document.querySelector("#disruptive-template").innerHTML.replace("%ID%", "click-form-"+markerID)
   }
   // TODO: actuaally control the marker stream with d3
   updateMarkers([marker])
@@ -46,14 +47,20 @@ updateMarkers = function(data) {
   .enter()
   .append("marker")
   .html(function(d, i) { return d.text })
+  .attr("id", function(d) { return d.id })
   .attr("lat", function(d) { return d.latlng[0] })
   .attr("lon", function(d) { return d.latlng[1] })
 }
 
 disruptiveOK = function(el) {
-  var input = el.previousElementSibling
-  console.log(el, input)
+  // SORRY WE RUSHED IN SOME HACKINESS
+  var input = el.parentNode.querySelector("input[type=text]")
+  var id = el.parentNode.id
+  var marker = geomap.querySelector("#"+id.replace("form", "marker"))
+  console.log(el, input, marker)
   el.parentNode.innerHTML = input.value
+  marker.innerHTML = input.value
+  marker._geomap.obj.setPopupContent(input.value) // YES THIS IS LEAFLET CODE, sorry we hacked it
 }
 
 window.addEventListener("DOMContentLoaded", function() {
